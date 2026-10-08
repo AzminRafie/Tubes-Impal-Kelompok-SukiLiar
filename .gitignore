@@ -1,0 +1,11 @@
+# Sistem operasi sampah
+.DS_Store
+Thumbs.db
+
+# Konfigurasi lokal dan file log
+config.local.php
+*.log
+
+# Editor direktori
+.vscode/
+.idea/
