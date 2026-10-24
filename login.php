@@ -2,7 +2,7 @@
 session_start();
 
 if (isset($_SESSION['user_id'])) {
-    header("Location: dashboard.php");
+    header("Location: dashboard_sementara.php");
     exit();
 }
 
@@ -11,13 +11,13 @@ $error = "";
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     require_once 'koneksi.php';
 
-    $email    = trim($_POST['email']);
+    $email = trim($_POST['email']);
     $password = trim($_POST['password']);
 
     if (empty($email) || empty($password)) {
         $error = "Email dan password tidak boleh kosong.";
     } else {
-        $sql  = "SELECT * FROM user WHERE email = ?";
+        $sql = "SELECT * FROM user WHERE email = ?";
         $stmt = mysqli_prepare($conn, $sql);
         mysqli_stmt_bind_param($stmt, "s", $email);
         mysqli_stmt_execute($stmt);
@@ -26,10 +26,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($row = mysqli_fetch_assoc($result)) {
             if ($password === $row['password']) {
                 $_SESSION['user_id'] = $row['user_id'];
-                $_SESSION['nama']    = $row['nama'];
-                $_SESSION['email']   = $row['email'];
-                $_SESSION['role']    = $row['role'];
-                header("Location: dashboard.php");
+                $_SESSION['nama'] = $row['nama'];
+                $_SESSION['email'] = $row['email'];
+                $_SESSION['role'] = $row['role'];
+                header("Location: dashboard_sementara.php");
                 exit();
             } else {
                 $error = "Password salah.";
@@ -45,20 +45,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 ?>
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login – RentaMobil</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
             /* Latar abu-abu slate keren (agak gelap tapi tidak pekat) */
             background-color: #1e293b;
-            background-image: 
+            background-image:
                 radial-gradient(circle at 10% 20%, rgba(51, 65, 85, 0.45) 0%, transparent 45%),
                 radial-gradient(circle at 90% 80%, rgba(51, 65, 85, 0.45) 0%, transparent 45%),
                 linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
@@ -86,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             pointer-events: none;
             z-index: 0;
         }
+
         .bg-glow-2 {
             position: absolute;
             width: 420px;
@@ -117,6 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             z-index: 1;
             pointer-events: none;
         }
+
         .badge-location {
             bottom: 28px;
             left: 36px;
@@ -159,6 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             align-items: center;
             gap: 12px;
         }
+
         .brand-icon {
             width: 40px;
             height: 40px;
@@ -170,6 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             justify-content: center;
             font-size: 20px;
         }
+
         .brand-info .title {
             font-size: 1.15rem;
             font-weight: 700;
@@ -177,6 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             line-height: 1.2;
             letter-spacing: -0.3px;
         }
+
         .brand-info .subtitle {
             font-size: 0.74rem;
             color: #94a3b8;
@@ -190,6 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             margin-bottom: 12px;
             letter-spacing: -0.4px;
         }
+
         .hero-text p {
             font-size: 0.88rem;
             color: #94a3b8;
@@ -202,11 +215,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             flex-direction: column;
             gap: 14px;
         }
+
         .feature-item {
             display: flex;
             align-items: flex-start;
             gap: 12px;
         }
+
         .feature-icon {
             width: 30px;
             height: 30px;
@@ -220,11 +235,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             flex-shrink: 0;
             margin-top: 1px;
         }
+
         .feature-item .text-main {
             font-size: 0.84rem;
             font-weight: 600;
             color: #e2e8f0;
         }
+
         .feature-item .text-sub {
             font-size: 0.76rem;
             color: #64748b;
@@ -239,6 +256,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             flex-direction: column;
             gap: 12px;
         }
+
         .footer-label {
             font-size: 0.72rem;
             text-transform: uppercase;
@@ -246,12 +264,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             font-weight: 600;
             color: #94a3b8;
         }
+
         .social-row {
             display: flex;
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
         }
+
         .social-link {
             display: inline-flex;
             align-items: center;
@@ -266,16 +286,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             text-decoration: none;
             transition: all 0.15s;
         }
+
         .social-link:hover {
             background: #334155;
             color: #ffffff;
             border-color: rgba(255, 255, 255, 0.25);
         }
+
         .social-link svg {
             width: 14px;
             height: 14px;
             stroke-width: 2;
         }
+
         .copyright-text {
             font-size: 0.72rem;
             color: #64748b;
@@ -301,6 +324,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             margin-bottom: 24px;
             border: 1px solid #e2e8f0;
         }
+
         .tab-btn {
             flex: 1;
             text-align: center;
@@ -312,18 +336,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             border-radius: 7px;
             transition: all 0.15s;
         }
+
         .tab-btn:hover {
             color: #0f172a;
         }
+
         .tab-btn.active {
             background: #0f172a;
             color: #ffffff;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .form-header {
             margin-bottom: 20px;
         }
+
         .form-header h2 {
             font-size: 1.45rem;
             font-weight: 700;
@@ -331,6 +358,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             letter-spacing: -0.3px;
             margin-bottom: 6px;
         }
+
         .form-header p {
             font-size: 0.84rem;
             color: #64748b;
@@ -354,23 +382,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .form-group {
             margin-bottom: 18px;
         }
+
         .form-label-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 6px;
         }
+
         .form-group label {
             font-size: 0.83rem;
             font-weight: 600;
             color: #1e293b;
         }
+
         .link-forgot {
             font-size: 0.8rem;
             color: #475569;
             text-decoration: none;
             font-weight: 500;
         }
+
         .link-forgot:hover {
             color: #0f172a;
             text-decoration: underline;
@@ -379,6 +411,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .input-wrap {
             position: relative;
         }
+
         .input-wrap input {
             width: 100%;
             padding: 11px 14px;
@@ -391,6 +424,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             outline: none;
             transition: all 0.2s;
         }
+
         .input-wrap input:focus {
             background: #ffffff;
             border-color: #0f172a;
@@ -410,7 +444,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             opacity: 0.6;
             transition: opacity 0.15s;
         }
-        .pw-toggle:hover { opacity: 1; }
+
+        .pw-toggle:hover {
+            opacity: 1;
+        }
 
         /* Submit Button */
         .btn-submit {
@@ -426,8 +463,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             transition: background 0.15s, transform 0.1s;
             margin-top: 4px;
         }
-        .btn-submit:hover { background: #1e293b; }
-        .btn-submit:active { transform: scale(0.99); }
+
+        .btn-submit:hover {
+            background: #1e293b;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.99);
+        }
 
 
 
@@ -443,18 +486,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 flex-direction: column;
                 max-width: 480px;
             }
+
             .panel-showcase {
                 padding: 32px 28px;
             }
+
             .panel-form {
                 padding: 32px 28px;
             }
+
             .feature-list {
                 display: none;
             }
         }
     </style>
 </head>
+
 <body>
 
     <!-- Ambient background glow -->
@@ -482,7 +529,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <div class="hero-text">
                     <h1>Sewa Mobil Mudah, Cepat & Terpercaya.</h1>
-                    <p>Platform rental mobil terpadu untuk kebutuhan harian, liburan keluarga, hingga perjalanan dinas di Bandung dan sekitarnya.</p>
+                    <p>Platform rental mobil terpadu untuk kebutuhan harian, liburan keluarga, hingga perjalanan dinas
+                        di Bandung dan sekitarnya.</p>
                 </div>
 
                 <div class="feature-list">
@@ -515,15 +563,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="footer-label">Hubungi & Ikuti Kami</div>
                 <div class="social-row">
                     <a href="https://instagram.com" target="_blank" class="social-link" title="Instagram">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                        </svg>
                         <span>@rentamobil.id</span>
                     </a>
                     <a href="https://wa.me/6281234567890" target="_blank" class="social-link" title="WhatsApp">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path
+                                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                            </path>
+                        </svg>
                         <span>0812-3456-7890</span>
                     </a>
                     <a href="https://facebook.com" target="_blank" class="social-link" title="Facebook">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                        </svg>
                         <span>RentaMobil</span>
                     </a>
                 </div>
@@ -548,10 +606,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
 
             <?php if (!empty($error)): ?>
-            <div class="error-box">
-                <span>⚠</span>
-                <span><?= htmlspecialchars($error) ?></span>
-            </div>
+                <div class="error-box">
+                    <span>⚠</span>
+                    <span><?= htmlspecialchars($error) ?></span>
+                </div>
             <?php endif; ?>
 
             <form method="POST" action="login.php" id="loginForm">
@@ -560,10 +618,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <label for="email">Email</label>
                     </div>
                     <div class="input-wrap">
-                        <input type="email" id="email" name="email"
-                            placeholder="nama@email.com"
-                            value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '' ?>"
-                            required autocomplete="email">
+                        <input type="email" id="email" name="email" placeholder="nama@email.com"
+                            value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '' ?>" required
+                            autocomplete="email">
                     </div>
                 </div>
 
@@ -573,10 +630,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <a href="lupa_password.php" class="link-forgot">Lupa password?</a>
                     </div>
                     <div class="input-wrap">
-                        <input type="password" id="password" name="password"
-                            placeholder="••••••••"
-                            style="padding-right: 42px;"
-                            required autocomplete="current-password">
+                        <input type="password" id="password" name="password" placeholder="••••••••"
+                            style="padding-right: 42px;" required autocomplete="current-password">
                         <button type="button" class="pw-toggle" id="togglePw" title="Lihat password">
                             <span id="eyeIcon">👁</span>
                         </button>
@@ -590,9 +645,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <script>
         // Toggle Show/Hide Password
-        const pwInput  = document.getElementById('password');
+        const pwInput = document.getElementById('password');
         const togglePw = document.getElementById('togglePw');
-        const eyeIcon  = document.getElementById('eyeIcon');
+        const eyeIcon = document.getElementById('eyeIcon');
 
         togglePw.addEventListener('click', () => {
             const show = pwInput.type === 'password';
@@ -608,4 +663,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         });
     </script>
 </body>
+
 </html>
