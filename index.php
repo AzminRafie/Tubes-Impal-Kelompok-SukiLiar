@@ -2,8 +2,8 @@
 session_start();
 
 if (isset($_SESSION['user_id'])) {
-    header("Location: dashboard_sementara.php");
+    header("Location: views/dashboard_sementara.php");
 } else {
-    header("Location: login.php");
+    header("Location: auth/login.php");
 }
 exit();

@@ -2,7 +2,7 @@
 session_start();
 
 if (isset($_SESSION['user_id'])) {
-    header("Location: dashboard_sementara.php");
+    header("Location: ../views/dashboard_sementara.php");
     exit();
 }
 
@@ -12,7 +12,7 @@ $success = "";
 $email_terverifikasi = "";
 $pertanyaan          = "";
 
-require_once 'koneksi.php';
+require_once '../config/koneksi.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['step'])) {
     $s = $_POST['step'];

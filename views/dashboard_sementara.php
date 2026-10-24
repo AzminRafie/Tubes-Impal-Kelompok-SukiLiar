@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: ../auth/login.php");
     exit();
 }
 
@@ -216,7 +216,7 @@ $role  = $_SESSION['role'] ?? 'customer';
         </div>
 
         <!-- TOMBOL LOGOUT -->
-        <a href="logout.php" class="btn-logout">Logout / Keluar</a>
+        <a href="../auth/logout.php" class="btn-logout">Logout / Keluar</a>
     </div>
 
 </body>
