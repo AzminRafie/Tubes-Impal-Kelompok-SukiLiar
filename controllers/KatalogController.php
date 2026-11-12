@@ -1,10 +1,14 @@
 <?php
+
+require_once __DIR__ . '/../config/koneksi.php';
 require_once __DIR__ . '/../models/MobilModel.php';
 require_once __DIR__ . '/../models/RentalModel.php';
+require_once __DIR__ . '/../models/Mobil.php';
 
 /**
  * Controller (MVC) - Usecase #5 Cari & Filter Mobil.
  * Menerima input (GET), memvalidasi, memanggil Model, lalu menyiapkan data untuk View.
+ * Menggabungkan implementasi fungsional fitur Reisa dan kerangka Class Diagram.
  */
 class KatalogController
 {
@@ -12,13 +16,21 @@ class KatalogController
     private const TRANSMISI = ['Manual', 'Matic'];
     private const STATUS    = ['Tersedia', 'Disewa'];
 
-    private MobilModel $model;
-    private RentalModel $rental;
+    private ?MobilModel $model = null;
+    private ?RentalModel $rental = null;
 
-    public function __construct()
+    private ?string $kataKunci = null;
+    private ?string $filterTransmisi = null;
+
+    public function __construct(?string $kataKunci = null, ?string $filterTransmisi = null)
     {
-        $this->model  = new MobilModel(db());
-        $this->rental = new RentalModel(db());
+        $this->kataKunci = $kataKunci;
+        $this->filterTransmisi = $filterTransmisi;
+
+        if (function_exists('db')) {
+            $this->model  = new MobilModel(db());
+            $this->rental = new RentalModel(db());
+        }
     }
 
     private function param(string $key): string
@@ -38,10 +50,10 @@ class KatalogController
         $sort = array_key_exists($this->param('sort'), MobilModel::SORT_OPTIONS) ? $this->param('sort') : 'recommended';
 
         // Langkah 5-6: cari ke tabel mobil + hitung ringkasan
-        $ringkasan    = $this->model->ringkasan($filter);
+        $ringkasan    = $this->model ? $this->model->ringkasan($filter) : ['total' => 0, 'tersedia' => 0];
         $totalHalaman = max(1, (int)ceil($ringkasan['total'] / self::PER_PAGE));
         $halaman      = min(max(1, (int)$this->param('page')), $totalHalaman);
-        $mobil        = $this->model->cari($filter, $sort, self::PER_PAGE, ($halaman - 1) * self::PER_PAGE);
+        $mobil        = $this->model ? $this->model->cari($filter, $sort, self::PER_PAGE, ($halaman - 1) * self::PER_PAGE) : [];
 
         foreach ($mobil as &$m) {
             $m['foto_url'] = $this->fotoUrl($m['foto_mobil']);
@@ -62,7 +74,7 @@ class KatalogController
     public function detail(): array
     {
         $id    = (int)$this->param('id');
-        $mobil = $id > 0 ? $this->model->find($id) : null;
+        $mobil = ($id > 0 && $this->model) ? $this->model->find($id) : null;
 
         // Alternative flow 3: data mobil sudah dihapus admin
         if (!$mobil) {
@@ -77,7 +89,7 @@ class KatalogController
 
         return [
             'mobil'     => $mobil,
-            'terblokir' => $this->rental->tanggalTerblokir($id),
+            'terblokir' => $this->rental ? $this->rental->tanggalTerblokir($id) : [],
             'hariIni'   => date('Y-m-d'),
         ];
     }
@@ -96,7 +108,48 @@ class KatalogController
             return null;
         }
         $nama = basename($nama);
-        $path = __DIR__ . '/../../public/uploads/mobil/' . $nama;
+        $path = __DIR__ . '/../public/uploads/mobil/' . $nama;
         return is_file($path) ? 'uploads/mobil/' . rawurlencode($nama) : null;
+    }
+
+    // ─── Skeleton methods from Class Diagram ─────────────────
+
+    // +List cariMobil(String keyword)
+    public function cariMobil(string $keyword): array {
+        // Skeleton: Mengembalikan daftar mobil yang sesuai dengan kata kunci pencarian
+        if ($this->model) {
+            return $this->model->cari(['q' => $keyword, 'transmisi' => '', 'status' => ''], 'recommended', 10, 0);
+        }
+        return [];
+    }
+
+    // +void tampilkanKatalog()
+    public function tampilkanKatalog(): void {
+        // Skeleton: Menampilkan daftar mobil / view katalog ke pengguna
+        header('Location: katalog.php');
+        exit;
+    }
+
+    // +boolean cekKetersediaan(Date tglMulai, Date tglSelesai)
+    public function cekKetersediaan(string $tglMulai, string $tglSelesai): bool {
+        // Skeleton: Memeriksa apakah mobil tersedia pada rentang tanggal tersebut
+        return true;
+    }
+
+    // Getters and Setters
+    public function getKataKunci(): ?string {
+        return $this->kataKunci;
+    }
+
+    public function setKataKunci(?string $kataKunci): void {
+        $this->kataKunci = $kataKunci;
+    }
+
+    public function getFilterTransmisi(): ?string {
+        return $this->filterTransmisi;
+    }
+
+    public function setFilterTransmisi(?string $filterTransmisi): void {
+        $this->filterTransmisi = $filterTransmisi;
     }
 }

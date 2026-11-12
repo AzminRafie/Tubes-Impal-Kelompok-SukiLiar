@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../config/koneksi.php';
 require_once __DIR__ . '/../models/RentalModel.php';
 
 /** Controller (MVC) - Usecase #9 Lihat My Bookings & Riwayat. */
