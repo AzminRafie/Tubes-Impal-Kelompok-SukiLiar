@@ -82,8 +82,9 @@
       $('lblTotalRental').textContent = 'Rp0';
       return;
     }
-    // Durasi = selisih hari, minimal 1 hari (DPPL 5.2)
-    const days = Math.max(1, Math.round((parse(ret) - parse(pickup)) / 86400000));
+    // Durasi hari inklusif (tgl 11 s/d 11 = 1 hari, tgl 11 s/d 12 = 2 hari)
+    const diff = Math.round((parse(ret) - parse(pickup)) / 86400000);
+    const days = Math.max(1, diff + 1);
     $('lblDuration').textContent = `${days} day${days > 1 ? 's' : ''} (${days * 24} hours)`;
     $('lblRateCalc').textContent = `${days} × ${rp(cfg.rate)}`;
     $('lblTotalRental').textContent = rp(days * cfg.rate);

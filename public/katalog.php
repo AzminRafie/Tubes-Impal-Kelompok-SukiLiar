@@ -8,6 +8,12 @@ if (empty($_SESSION['user_id'])) {
     exit;
 }
 
+// Admin diarahkan ke dashboard admin (dashboard_sementara.php)
+if (($_SESSION['role'] ?? '') === 'admin') {
+    header('Location: ../views/dashboard_sementara.php');
+    exit;
+}
+
 require_once __DIR__ . '/../config/koneksi.php';
 require_once __DIR__ . '/../helpers.php';
 require_once __DIR__ . '/../controllers/KatalogController.php';

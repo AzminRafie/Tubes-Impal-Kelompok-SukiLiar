@@ -2,7 +2,11 @@
 session_start();
 
 if (isset($_SESSION['user_id'])) {
-    header("Location: ../public/katalog.php");
+    if (($_SESSION['role'] ?? '') === 'admin') {
+        header("Location: ../views/dashboard_sementara.php");
+    } else {
+        header("Location: ../public/katalog.php");
+    }
     exit();
 }
 
@@ -29,7 +33,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $_SESSION['nama'] = $row['nama'];
                 $_SESSION['email'] = $row['email'];
                 $_SESSION['role'] = $row['role'];
-                header("Location: ../public/katalog.php");
+
+                if ($row['role'] === 'admin') {
+                    header("Location: ../views/dashboard_sementara.php");
+                } else {
+                    header("Location: ../public/katalog.php");
+                }
                 exit();
             } else {
                 $error = "Password salah.";

@@ -4,11 +4,11 @@ function rupiah(int $n): string { return 'Rp' . number_format($n, 0, ',', '.'); 
 
 const BULAN_PENDEK = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-/** Durasi sewa (hari). Selisih 0 dibulatkan jadi minimal 1 hari (DPPL 5.2). */
+/** Durasi sewa (hari). Inklusif: tgl 11 s/d 11 = 1 hari, tgl 11 s/d 12 = 2 hari. */
 function durasiHari(string $mulai, string $selesai): int
 {
     $selisih = (int)(new DateTimeImmutable($mulai))->diff(new DateTimeImmutable($selesai))->format('%a');
-    return max(1, $selisih);
+    return $selisih + 1;
 }
 
 /** "12–15 Nov 2026", "30 Oct–02 Nov 2026", atau lintas tahun. */
