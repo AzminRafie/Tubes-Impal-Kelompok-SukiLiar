@@ -215,7 +215,10 @@ $role  = $_SESSION['role'] ?? 'customer';
             </div>
         </div>
 
-        <!-- TOMBOL LOGOUT -->
+        <!-- TOMBOL MENU -->
+        <?php if ($role !== 'admin'): ?>
+        <a href="../public/katalog.php" style="display:block; width:100%; padding:12px; background:#0f172a; color:#fff; border-radius:10px; font-size:0.95rem; font-weight:600; text-decoration:none; margin-bottom:10px;">Lihat Katalog Mobil →</a>
+        <?php endif; ?>
         <a href="../auth/logout.php" class="btn-logout">Logout / Keluar</a>
     </div>
 
