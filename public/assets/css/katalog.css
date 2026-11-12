@@ -1,0 +1,51 @@
+:root { --rm-navy: #16355c; --rm-bg: #f4f5f9; --rm-ok: #1f7a4d; --rm-ok-bg: #e4f4ea; --rm-rent: #3b5b8c; --rm-rent-bg: #e3ebf7; }
+body { background: var(--rm-bg); display: flex; flex-direction: column; min-height: 100vh; }
+main { flex: 1; }
+
+.rm-navbar { background: var(--rm-navy); }
+.rm-navbar .navbar-brand { color: #fff; }
+.rm-search { max-width: 260px; min-width: 180px; }
+.rm-select { max-width: 180px; }
+
+.btn-rm { background: var(--rm-navy); border-color: var(--rm-navy); color: #fff; }
+.btn-rm:hover, .btn-rm:focus { background: #0f2745; border-color: #0f2745; color: #fff; }
+
+.rm-card { border: 1px solid #e2e5ec; border-radius: .5rem; overflow: hidden; }
+.rm-photo { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: #e9ecf3; }
+.rm-photo-empty { display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #9aa3b5; }
+.rm-price { color: var(--rm-navy); }
+
+.rm-badge { font-weight: 500; }
+.rm-badge-ok { background: var(--rm-ok-bg); color: var(--rm-ok); }
+.rm-badge-rented { background: var(--rm-rent-bg); color: var(--rm-rent); }
+
+.rm-pagination .page-link { color: var(--rm-navy); }
+.rm-pagination .active .page-link { background: var(--rm-navy); border-color: var(--rm-navy); color: #fff; }
+
+:focus-visible { outline: 2px solid #4c8dff; outline-offset: 2px; }
+
+/* Badge tambahan (My Bookings) */
+.rm-badge-wait { background: #fff3cd; color: #8a6100; }
+.rm-badge-cancel { background: #fde8e8; color: #a32a2a; }
+
+/* Stepper (detail mobil) */
+.rm-step-no { display: inline-flex; align-items: center; justify-content: center; width: 1.3rem; height: 1.3rem; border-radius: .25rem; background: #e9ecf3; color: #5b6475; font-size: .72rem; margin-right: .25rem; }
+.rm-step-no.done { background: var(--rm-navy); color: #fff; }
+.rm-spec dd { margin-bottom: .4rem; }
+
+/* Kalender ketersediaan */
+.rm-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: .35rem; }
+.rm-day { border: 1px solid #dfe3ea; background: #fff; border-radius: .375rem; min-height: 2.7rem; font-size: .85rem; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; }
+.rm-day small { font-size: .6rem; }
+.rm-day:hover:not(.blocked):not(.past):not(.selected) { border-color: var(--rm-navy); }
+.rm-day.blocked, .rm-day.past { background: #eceff4; color: #9aa3b5; text-decoration: line-through; }
+.rm-day.blocked { cursor: not-allowed; }
+.rm-day.selected { background: var(--rm-navy); border-color: var(--rm-navy); color: #fff; }
+.rm-dot { display: inline-block; width: .7rem; height: .7rem; border-radius: .15rem; border: 1px solid #dfe3ea; vertical-align: -1px; margin-right: .2rem; }
+.rm-dot-avail { background: #fff; } .rm-dot-blocked { background: #eceff4; } .rm-dot-sel { background: var(--rm-navy); border-color: var(--rm-navy); }
+.rm-toast-error { border-left: 4px solid #dc3545; }
+
+/* Status tracker (My Bookings) */
+.rm-tracker { display: flex; flex-wrap: wrap; gap: .25rem .6rem; color: #8a93a5; font-size: .75rem; }
+.rm-tracker .done { color: var(--rm-ok); }
+.rm-tracker .now { color: var(--rm-navy); font-weight: 600; }
