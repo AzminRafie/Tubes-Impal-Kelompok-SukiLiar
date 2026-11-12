@@ -66,9 +66,16 @@
     $('msgDateBooked').textContent = '';
     if (blocked.has(k)) return showError('This date is already booked.');
 
-    if (!pickup || ret || k < pickup) { pickup = k; ret = null; }
-    else if (rangeBlocked(pickup, k)) return showError('This date is already booked.');
-    else ret = k;
+    if (!pickup || ret || k < pickup) {
+      pickup = k;
+      ret = null;
+    } else if (k === pickup) {
+      return showError('Sewa minimal 24 jam. Tanggal Return harus minimal 1 hari setelah tanggal Pickup.');
+    } else if (rangeBlocked(pickup, k)) {
+      return showError('This date is already booked.');
+    } else {
+      ret = k;
+    }
     render();
   }
 
@@ -82,9 +89,8 @@
       $('lblTotalRental').textContent = 'Rp0';
       return;
     }
-    // Durasi hari inklusif (tgl 11 s/d 11 = 1 hari, tgl 11 s/d 12 = 2 hari)
-    const diff = Math.round((parse(ret) - parse(pickup)) / 86400000);
-    const days = Math.max(1, diff + 1);
+    // Hitungan sewa 24 jam: selisih hari (Return minimal H+1)
+    const days = Math.max(1, Math.round((parse(ret) - parse(pickup)) / 86400000));
     $('lblDuration').textContent = `${days} day${days > 1 ? 's' : ''} (${days * 24} hours)`;
     $('lblRateCalc').textContent = `${days} × ${rp(cfg.rate)}`;
     $('lblTotalRental').textContent = rp(days * cfg.rate);
@@ -95,6 +101,7 @@
 
   $('btnProceedCheckout').addEventListener('click', () => {
     if (!pickup || !ret) return showError('Pilih tanggal Pickup dan Return terlebih dahulu.');
+    if (pickup === ret) return showError('Sewa minimal 24 jam. Tanggal Return harus minimal 1 hari setelah tanggal Pickup.');
     window.location.href = `${cfg.checkoutUrl}&mulai=${pickup}&selesai=${ret}`;
   });
 

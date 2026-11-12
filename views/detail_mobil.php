@@ -90,7 +90,7 @@ require __DIR__ . '/partials/header.php';
             <span><i class="rm-dot rm-dot-blocked"></i> Blocked</span>
             <span><i class="rm-dot rm-dot-sel"></i> Selected</span>
           </div>
-          <p class="small text-secondary mb-3">Select a pickup and return date. Blocked dates cannot be booked.</p>
+          <p class="small text-secondary mb-3">Pilih tanggal Pickup dan Return (sewa minimal 24 jam / pengembalian minimal H+1). Tanggal merah/abu tidak dapat dipesan.</p>
 
           <div class="row g-2 mb-3">
             <div class="col-6">
