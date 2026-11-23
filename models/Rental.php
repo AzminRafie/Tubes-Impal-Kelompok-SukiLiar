@@ -10,6 +10,7 @@ class Rental {
     private ?string $alamat_penjemputan;
     private ?string $foto_ktp;
     private ?string $status_pesanan;
+    private ?int $harga_perhari_ref = null;
 
     public function __construct(
         ?int $rental_id = null,
@@ -20,7 +21,7 @@ class Rental {
         ?int $total_harga = null,
         ?string $alamat_penjemputan = null,
         ?string $foto_ktp = null,
-        ?string $status_pesanan = 'menunggu_pembayaran'
+        ?string $status_pesanan = 'Menunggu Pembayaran'
     ) {
         $this->rental_id = $rental_id;
         $this->user_id = $user_id;
@@ -33,9 +34,25 @@ class Rental {
         $this->status_pesanan = $status_pesanan;
     }
 
+    /** Menetapkan harga per hari referensi dari data mobil (server-side) untuk perhitungan total. */
+    public function setHargaPerhariReferensi(int $hargaPerhari): void {
+        $this->harga_perhari_ref = max(0, $hargaPerhari);
+    }
+
     // +int hitungTotal()
     public function hitungTotal(): int {
-        // Skeleton: Menghitung total harga rental berdasarkan durasi hari & harga per hari mobil
+        if ($this->tanggal_mulai && $this->tanggal_selesai && $this->harga_perhari_ref !== null) {
+            try {
+                $mulai = new DateTimeImmutable($this->tanggal_mulai);
+                $selesai = new DateTimeImmutable($this->tanggal_selesai);
+                $selisih = (int)$mulai->diff($selesai)->format('%a');
+                $durasi = max(1, $selisih);
+                $this->total_harga = $durasi * $this->harga_perhari_ref;
+                return $this->total_harga;
+            } catch (Exception $e) {
+                return $this->total_harga ?? 0;
+            }
+        }
         return $this->total_harga ?? 0;
     }
 

@@ -1,26 +1,24 @@
 <?php
 require_once __DIR__ . '/../config/koneksi.php';
-require_once __DIR__ . '/../models/RentalModel.php';
+require_once __DIR__ . '/../controllers/TransaksiController.php';
 
 /** Controller (MVC) - Usecase #9 Lihat My Bookings & Riwayat. */
 class RentalController
 {
     private const AKTIF = ['Menunggu Pembayaran', 'Menunggu Verifikasi', 'Disewa'];
 
-    private RentalModel $model;
+    private TransaksiController $transaksi;
 
     public function __construct()
     {
-        $this->model = new RentalModel(db());
+        $this->transaksi = new TransaksiController(db());
     }
 
     public function myBookings(int $userId): array
     {
         $aktif = [];
         $riwayat = [];
-        foreach ($this->model->pesananUser($userId) as $r) {
-            $r['kode']   = kodeBooking((int)$r['rental_id'], $r['tanggal_mulai']);
-            $r['durasi'] = durasiHari($r['tanggal_mulai'], $r['tanggal_selesai']);
+        foreach ($this->transaksi->tampilkanRiwayat($userId) as $r) {
             if (in_array($r['status_pesanan'], self::AKTIF, true)) {
                 $aktif[] = $r;
             } else {

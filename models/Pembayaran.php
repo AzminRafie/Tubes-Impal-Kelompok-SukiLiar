@@ -14,7 +14,7 @@ class Pembayaran {
         ?string $metode_pembayaran = null,
         ?int $jumlah_bayar = null,
         ?string $bukti_transfer = null,
-        ?string $status_pembayaran = 'menunggu_verifikasi'
+        ?string $status_pembayaran = 'Menunggu Verifikasi'
     ) {
         $this->pembayaran_id = $pembayaran_id;
         $this->rental_id = $rental_id;
